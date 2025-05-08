@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StyleBox — Магазин одежды</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex flex-col min-h-screen bg-gray-100 text-gray-800">
+
+  <header class="bg-white shadow p-4 flex justify-between items-center relative z-10">
+    <h1 class="text-2xl font-bold text-indigo-600">StyleBox</h1>
+    <button id="burger-toggle" class="md:hidden text-indigo-600 text-2xl">☰</button>
+
+    <nav id="nav-menu" class="absolute top-full left-0 w-full bg-white shadow-md md:shadow-none md:static md:w-auto md:flex hidden md:items-center md:space-x-6 px-4 md:px-0 py-4 md:py-0">
+      <a href="index.html" class="block py-2 md:py-0 text-indigo-600 hover:underline">Главная</a>
+      <a href="cart.html" class="block py-2 md:py-0 text-indigo-600 hover:underline">Корзина</a>
+      <a href="admin.html" class="block py-2 md:py-0 text-indigo-600 hover:underline">Админка</a>
+
+      <div class="relative md:static">
+        <button id="user-menu-button" class="block py-2 md:py-0 text-indigo-600 hover:underline w-full text-left md:text-center">
+          Войти
+        </button>
+        <div id="user-menu" class="hidden absolute bg-white border border-gray-200 rounded shadow-lg mt-1 right-0 w-44 z-50">
+          <a href="login.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Вход</a>
+          <a href="register.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Регистрация</a>
+          <a id="account-link" href="account.html" class="hidden px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Личный кабинет</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="flex-grow p-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+      <div id="filters" class="flex flex-wrap gap-2">
+        <button data-category="all" class="filter-btn px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Все</button>
+        <button data-category="Футболка" class="filter-btn px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Футболки</button>
+        <button data-category="Джинсы" class="filter-btn px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Джинсы</button>
+        <button data-category="Худи" class="filter-btn px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Худи</button>
+        <button data-category="Платье" class="filter-btn px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Платья</button>
+        <button data-category="Кроссовки" class="filter-btn px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Кроссовки</button>
+        <button data-category="Куртка" class="filter-btn px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Куртки</button>
+      </div>
+
+      <div class="w-full sm:w-64 flex items-center gap-2">
+        <input id="search-input" type="text" placeholder="Поиск товара..." class="w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+        <button id="search-btn" class="text-xl text-gray-400 hover:text-black transition">
+          🔍
+        </button>        
+      </div>
+    </div>
+
+    <h2 class="text-xl font-semibold mb-4">Каталог товаров</h2>
+    <div id="product-list" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 px-4">
+      <!-- Карточки появятся здесь -->
+    </div>
+    <div class="text-gray-500 italic">Товары скоро появятся...</div>
+  </main>
+
+  <footer class="bg-white shadow p-4 text-center text-sm text-gray-500">
+    &copy; 2025 StyleBox. Все права защищены.
+  </footer>
+
+  <div id="toast" class="fixed bottom-6 right-6 bg-indigo-600 text-white px-4 py-2 rounded shadow-md opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+    Товар добавлен в корзину
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggle = document.getElementById('burger-toggle');
+      const menu = document.getElementById('nav-menu');
+      const userBtn = document.getElementById('user-menu-button');
+      const userMenu = document.getElementById('user-menu');
+      const accountLink = document.getElementById('account-link');
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      if (user && user.name && userBtn) {
+        userBtn.textContent = `Привет, ${user.name}`;
+        accountLink.classList.remove('hidden');
+      }
+
+      toggle.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+      });
+
+      document.querySelectorAll('#nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth < 768) {
+            menu.classList.add('hidden');
+          }
+        });
+      });
+
+      userBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        userMenu.classList.toggle('hidden');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
+          userMenu.classList.add('hidden');
+        }
+      });
+
+      const searchInput = document.getElementById('search-input');
+      const productList = document.getElementById('product-list');
+
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+        const cards = productList.querySelectorAll('.product-card');
+
+        cards.forEach(card => {
+          const title = card.querySelector('.product-title').textContent.toLowerCase();
+          card.style.display = title.includes(query) ? 'block' : 'none';
+        });
+      });
+    });
+  </script>
+  <script src="js/products.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Вход | StyleBox</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen text-gray-800">
+
+  <main class="bg-white p-6 rounded shadow-md w-full max-w-sm">
+    <h1 class="text-2xl font-bold text-center mb-4">Вход в аккаунт</h1>
+
+    <form id="login-form" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium">Имя</label>
+        <input type="text" id="login-name" required class="w-full border rounded px-3 py-2 mt-1" placeholder="Введите имя">
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Пароль</label>
+        <input type="password" id="login-password" required class="w-full border rounded px-3 py-2 mt-1" placeholder="Пароль">
+      </div>
+
+      <!-- Чекбокс показать пароль -->
+      <div class="flex items-center text-sm">
+        <input type="checkbox" id="show-password" class="mr-2">
+        <label for="show-password" class="text-gray-600">Показать пароль</label>
+      </div>
+
+      <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">
+        Войти
+      </button>
+
+      <!-- Ссылка на главную -->
+      <div class="text-center mt-4">
+        <a href="index.html" class="text-sm text-indigo-600 hover:underline">← Вернуться на главную</a>
+      </div>
+    </form>
+
+    <p class="text-sm text-center mt-4 text-gray-600">
+      Нет аккаунта? <a href="register.html" class="text-indigo-600 hover:underline">Зарегистрируйтесь</a>
+    </p>
+  </main>
+
+  <script>
+    // Показать/скрыть пароль
+    document.getElementById('show-password').addEventListener('change', function () {
+      const passwordInput = document.getElementById('login-password');
+      passwordInput.type = this.checked ? 'text' : 'password';
+    });
+
+    // Обработка входа
+    const form = document.getElementById('login-form');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('login-name').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const user = users.find(u => u.name === name && u.password === password);
+
+      if (user) {
+        localStorage.setItem('user', JSON.stringify({ name: user.name }));
+        alert('Успешный вход!');
+        window.location.href = 'account.html';
+      } else {
+        alert('Неверное имя или пароль');
+      }
+    });
+  </script>
+
+</body>
+</html>

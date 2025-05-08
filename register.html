@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Регистрация | StyleBox</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen text-gray-800">
+
+  <main class="bg-white p-6 rounded shadow-md w-full max-w-sm">
+    <h1 class="text-2xl font-bold text-center mb-4">Регистрация</h1>
+
+    <form id="register-form" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium">Имя</label>
+        <input type="text" id="reg-name" required class="w-full border rounded px-3 py-2 mt-1" placeholder="Введите имя">
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Пароль</label>
+        <input type="password" id="reg-password" required class="w-full border rounded px-3 py-2 mt-1" placeholder="Придумайте пароль">
+      </div>
+
+      <!-- Чекбокс показать пароль -->
+      <div class="flex items-center text-sm">
+        <input type="checkbox" id="show-password" class="mr-2">
+        <label for="show-password" class="text-gray-600">Показать пароль</label>
+      </div>
+
+      <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">
+        Зарегистрироваться
+      </button>
+
+      <!-- Ссылка на главную -->
+      <div class="text-center mt-4">
+        <a href="index.html" class="text-sm text-indigo-600 hover:underline">← Вернуться на главную</a>
+      </div>
+    </form>
+
+    <p class="text-sm text-center mt-4 text-gray-600">
+      Уже есть аккаунт? <a href="login.html" class="text-indigo-600 hover:underline">Войти</a>
+    </p>
+  </main>
+
+  <script>
+    // Показать/скрыть пароль
+    document.getElementById('show-password').addEventListener('change', function () {
+      const passwordInput = document.getElementById('reg-password');
+      passwordInput.type = this.checked ? 'text' : 'password';
+    });
+
+    // Обработка регистрации
+    const form = document.getElementById('register-form');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const password = document.getElementById('reg-password').value;
+
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+
+      const exists = users.find(u => u.name === name);
+      if (exists) {
+        alert("Пользователь с таким именем уже существует.");
+        return;
+      }
+
+      users.push({ name, password });
+      localStorage.setItem('users', JSON.stringify(users));
+
+      alert("Регистрация прошла успешно!");
+      window.location.href = 'login.html';
+    });
+  </script>
+
+</body>
+</html>

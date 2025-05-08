@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Личный кабинет | StyleBox</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
+
+  <main class="flex-grow p-6 max-w-2xl mx-auto">
+    <h1 class="text-2xl font-bold mb-4">Добро пожаловать, <span id="username" class="text-indigo-600">Гость</span></h1>
+
+    <p class="mb-6 text-gray-600">Это ваш личный кабинет. Здесь вы можете просматривать историю заказов и управлять аккаунтом.</p>
+
+    <div class="flex gap-4 mb-8">
+      <button id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+        Выйти
+      </button>
+
+      <a href="index.html" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
+        На главную
+      </a>
+    </div>
+
+    <div>
+      <h2 class="text-xl font-semibold mb-2">История заказов</h2>
+      <ul class="space-y-2 text-sm text-gray-700">
+        <li class="bg-gray-50 p-3 rounded border">🛍 Худи Oversize Black — 1 шт. — 8990 ₸</li>
+        <li class="bg-gray-50 p-3 rounded border">🛍 Кроссовки Urban Street — 1 шт. — 10500 ₸</li>
+      </ul>
+    </div>
+  </main>
+
+  <footer class="bg-white shadow p-4 text-center text-sm text-gray-500">
+    &copy; 2025 StyleBox. Все права защищены.
+  </footer>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    if (user) {
+      document.getElementById('username').textContent = user.name;
+    } else {
+      window.location.href = 'login.html';
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      localStorage.removeItem('user');
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

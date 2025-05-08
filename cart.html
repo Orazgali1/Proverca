@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StyleBox — Корзина</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex flex-col min-h-screen bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white shadow p-4 flex justify-between items-center relative">
+    <h1 class="text-2xl font-bold text-indigo-600">StyleBox</h1>
+    <button id="burger-toggle" class="md:hidden text-indigo-600 text-2xl">☰</button>
+    <nav id="nav-menu" class="absolute top-full left-0 w-full bg-white shadow-md md:shadow-none md:static md:w-auto md:flex hidden md:items-center md:space-x-6 px-4 md:px-0 py-4 md:py-0">
+      <a href="index.html" class="block py-2 md:py-0 text-indigo-600 hover:underline">Главная</a>
+      <a href="cart.html" class="block py-2 md:py-0 text-indigo-600 font-semibold underline">Корзина</a>
+      <a href="admin.html" class="block py-2 md:py-0 text-indigo-600 hover:underline">Админка</a>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-grow p-6 max-w-5xl mx-auto">
+    <h2 class="text-2xl font-semibold mb-6">Корзина</h2>
+    <div id="cart-items" class="space-y-4"></div>
+    <div id="cart-total" class="mt-6 text-lg font-bold"></div>
+
+    <button id="checkout-btn" class="mt-6 bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">
+      Оформить заказ
+    </button>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white shadow p-4 text-center text-sm text-gray-500">
+    &copy; 2025 StyleBox. Все права защищены.
+  </footer>
+
+  <!-- Уведомление при отсутствии входа -->
+  <div id="login-toast" class="fixed bottom-6 right-6 bg-red-600 text-white px-4 py-2 rounded shadow-md opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+    Пожалуйста, войдите в аккаунт, чтобы просмотреть корзину.
+  </div>
+
+  <!-- Авторизация -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const toast = document.getElementById('login-toast');
+
+      if (!user) {
+        toast.classList.remove('opacity-0', 'pointer-events-none');
+        toast.classList.add('opacity-100');
+
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 2500);
+      }
+    });
+  </script>
+
+  <!-- Бургер-меню -->
+  <script>
+    const toggle = document.getElementById('burger-toggle');
+    const menu = document.getElementById('nav-menu');
+
+    toggle.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+
+    document.querySelectorAll('#nav-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth < 768) {
+          menu.classList.add('hidden');
+        }
+      });
+    });
+  </script>
+
+  <!-- Скрипт корзины -->
+  <script src="js/cart.js"></script>
+</body>
+</html>
